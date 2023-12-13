@@ -22,6 +22,6 @@ from delicious_way.views import DeliciousWayAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/delisious_waylist/', DeliciousWayAPIView.as_view())
-
+    path('api/v1/delisious_waylist/', DeliciousWayAPIView.as_view()),
+    path('api/v1/delisious_waylist/<int:pk>/', DeliciousWayAPIView.as_view()),
 ]

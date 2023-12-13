@@ -16,14 +16,35 @@ class DeliciousWayAPIView(APIView):
     def post(self, request):
         serializer = DeliciousWaySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-        post_new = DeliciousWay.objects.create(
-            title=request.data['title'],
-            content=request.data['content'],
-            cat_id=request.data['cat_id']
-        )
+        return Response({'post': serializer.data})
 
-        return Response({'post': DeliciousWaySerializer(post_new).data})
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method PUT not allowed"})
+
+        try:
+            instance = DeliciousWay.objects.get(pk=pk)
+        except:
+            return Response({"error": "Object does not exists"})
+
+        serializer = DeliciousWaySerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({"post": serializer.data})
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method DELETE not allowed"})
+
+        # здесь код для удаления записи с переданным pk
+
+        return Response({"post": "delete post " + str(pk)})
+
 
 # class DeliciousWayAPIView(generics.ListAPIView):
 #     queryset = DeliciousWay.objects.all()
