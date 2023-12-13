@@ -41,7 +41,12 @@ class DeliciousWayAPIView(APIView):
         if not pk:
             return Response({"error": "Method DELETE not allowed"})
 
-        # здесь код для удаления записи с переданным pk
+        try:
+            instance = DeliciousWay.objects.get(pk=pk)
+            instance.delete()
+
+        except:
+            return Response({"error": "Object does not exists"})
 
         return Response({"post": "delete post " + str(pk)})
 
