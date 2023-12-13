@@ -9,17 +9,21 @@ from rest_framework.views import APIView
 
 class DeliciousWayAPIView(APIView):
     def get(self, request):
-        lst = DeliciousWay.objects.all().values()
-        return Response({'posts': list(lst)})
+        w = DeliciousWay.objects.all().values()
+        return Response({'posts': DeliciousWaySerializer(w, many=True).data})
+
 
     def post(self, request):
+        serializer = DeliciousWaySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         post_new = DeliciousWay.objects.create(
             title=request.data['title'],
             content=request.data['content'],
             cat_id=request.data['cat_id']
         )
 
-        return Response({'post': model_to_dict(post_new)})
+        return Response({'post': DeliciousWaySerializer(post_new).data})
 
 # class DeliciousWayAPIView(generics.ListAPIView):
 #     queryset = DeliciousWay.objects.all()
