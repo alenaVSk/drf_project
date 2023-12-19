@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from delicious_way.views import DeliciousWayAPIView
+from delicious_way.views import *
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/delisious_waylist/', DeliciousWayAPIView.as_view()),
-    path('api/v1/delisious_waylist/<int:pk>/', DeliciousWayAPIView.as_view()),
+    path('api/v1/delisious_waylist/', DeliciousWayAPIList.as_view()),
+    path('api/v1/delisious_waylist/<int:pk>/', DeliciousWayAPIUpdate.as_view()),
+    path('api/v1/delisious_waydetail/<int:pk>/', DeliciousWayAPIDetailView.as_view()),
 ]
