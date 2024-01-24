@@ -15,14 +15,34 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from delicious_way.views import *
+from rest_framework import routers
 
+
+class MyCustomRouter(routers.SimpleRouter):
+    routes = [
+        routers.Route(url=r'^{prefix}$',
+                      mapping={'get': 'list'},
+                      name='{basename}-list',
+                      detail=False,
+                      initkwargs={'suffix': 'List'}),
+        routers.Route(url=r'^{prefix}/{lookup}$',
+                      mapping={'get': 'retrieve'},
+                      name='{basename}-detail',
+                      detail=True,
+                      initkwargs={'suffix': 'Detail'})
+    ]
+
+
+router = MyCustomRouter()
+router.register(r'delisious_way', DeliciousWayViewSet, basename='delisious_way')
+print(router.urls)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/delisious_waylist/', DeliciousWayAPIList.as_view()),
-    path('api/v1/delisious_waylist/<int:pk>/', DeliciousWayAPIUpdate.as_view()),
-    path('api/v1/delisious_waydetail/<int:pk>/', DeliciousWayAPIDetailView.as_view()),
+    path('api/v1/', include(router.urls)),   # http://127.0.0.1:8000/api/v1/delisious_way/
+    # path('api/v1/delisious_waylist/', DeliciousWayViewSet.as_view({'get': 'list'})),
+    # path('api/v1/delisious_waylist/<int:pk>/', DeliciousWayViewSet.as_view({'put': 'update'})),
 ]
